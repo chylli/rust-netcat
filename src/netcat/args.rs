@@ -47,3 +47,56 @@ pub fn parse(args: Vec<String>) -> Result<Args, String> {
         }
     }
 }
+
+#[test]
+fn test_parse(){
+    let args : Vec<String> = vec!("neccat","-h", "1234").iter().map(|s| s.to_string()).collect();
+    let p : String = args[0].clone();
+    match parse(args) {
+        Ok(Args::Usage(program, opts)) => assert!(program == p, "usage"),
+        _ => assert!(false),
+    }
+
+    let args : Vec<String> = vec!("neccat","1234").iter().map(|s| s.to_string()).collect();
+    let p : String = args[0].clone();
+    match parse(args) {
+        Err(_) => assert!(true), //TODO use Error
+        _ => assert!(false),
+    }
+
+    let args : Vec<String> = vec!("neccat","host", "1234").iter().map(|s| s.to_string()).collect();
+    let p : String = args[0].clone();
+    match parse(args) {
+        Ok(Args::SendMode(_,_)) => assert!(true), 
+        _ => assert!(false),
+    }
+
+    let args : Vec<String> = vec!("neccat","host", "abcd").iter().map(|s| s.to_string()).collect();
+    let p : String = args[0].clone();
+    match parse(args) {
+        Err(_) => assert!(true), 
+        _ => assert!(false),
+    }
+
+    let args : Vec<String> = vec!("neccat", "-l", "1234").iter().map(|s| s.to_string()).collect();
+    let p : String = args[0].clone();
+    match parse(args) {
+        Ok(Args::ListenMode(p)) => assert_eq!(p, 1234), 
+        _ => assert!(false),
+    }
+
+    let args : Vec<String> = vec!("neccat", "-l", "abcd").iter().map(|s| s.to_string()).collect();
+    let p : String = args[0].clone();
+    match parse(args) {
+        Err(_) => assert!(true),
+        _ => assert!(false),
+    }
+
+    let args : Vec<String> = vec!("neccat", "abcd").iter().map(|s| s.to_string()).collect();
+    let p : String = args[0].clone();
+    match parse(args) {
+        Err(_) => assert!(true),
+        _ => assert!(false),
+    }
+
+}
