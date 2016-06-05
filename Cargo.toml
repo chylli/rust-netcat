@@ -4,3 +4,4 @@ version = "0.1.0"
 authors = ["Chylli <chylli@binary.com>"]
 
 [dependencies]
+getopts = "0.2"
